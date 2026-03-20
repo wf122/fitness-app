@@ -1,0 +1,85 @@
+{
+  "entities": {
+    "Profile": {
+      "title": "User Profile",
+      "description": "Stores user's physical profile and custom exercises.",
+      "type": "object",
+      "properties": {
+        "height": { "type": "number" },
+        "age": { "type": "number" },
+        "gender": { "type": "string", "enum": ["male", "female"] },
+        "customExercises": {
+          "type": "object",
+          "description": "Map of body part to array of custom exercise names."
+        }
+      },
+      "required": ["gender"]
+    },
+    "DailyRecord": {
+      "title": "Daily Record",
+      "description": "Stores daily habits, calories, durations, and body stats.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "habits": { "type": "object" },
+        "calories": {
+          "type": "object",
+          "properties": {
+            "intake": { "type": "number" },
+            "burned": { "type": "number" },
+            "bmr": { "type": "number" }
+          }
+        },
+        "workoutStats": { "type": "object" },
+        "pilates": {
+          "type": "object",
+          "properties": { "duration": { "type": "number" } }
+        },
+        "treadmill": {
+          "type": "object",
+          "properties": { "duration": { "type": "number" } }
+        },
+        "body": {
+          "type": "object",
+          "properties": {
+            "weight": { "type": "number" },
+            "bust": { "type": "number" },
+            "waist": { "type": "number" },
+            "hips": { "type": "number" }
+          }
+        },
+        "noWorkout": { "type": "boolean" },
+        "noCardio": { "type": "boolean" }
+      },
+      "required": ["date"]
+    },
+    "WorkoutSet": {
+      "title": "Workout Set",
+      "description": "A single set of a strength exercise.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "part": { "type": "string" },
+        "exercise": { "type": "string" },
+        "weight": { "type": "number" },
+        "reps": { "type": "number" },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["date", "part", "exercise", "weight", "reps", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/profile/{docId}": {
+      "schema": { "$ref": "#/entities/Profile" },
+      "description": "User profile document (docId usually 'main')."
+    },
+    "/users/{userId}/dailyRecords/{date}": {
+      "schema": { "$ref": "#/entities/DailyRecord" },
+      "description": "Daily records indexed by date string (YYYY-MM-DD)."
+    },
+    "/users/{userId}/workoutSets/{setId}": {
+      "schema": { "$ref": "#/entities/WorkoutSet" },
+      "description": "Individual workout sets."
+    }
+  }
+}
